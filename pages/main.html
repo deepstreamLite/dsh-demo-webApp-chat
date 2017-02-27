@@ -1,7 +1,15 @@
 <div ng-controller="main">
-<form>
+<form ng-show="!logedIn">
   <input type="text" placeholder="email" ng-model="email" ng-required="true"/>
   <input type="text" placeholder="password" ng-model="password" ng-required="true"/>
   <button ng-click='login()'>Login</button>
 </form>
+
+<div ng-show="logedIn">
+<h2>These are the other users</h2>
+<div ng-repeat="user in usersList" id='{{user.userId}}'>
+<h3>{{user.email}}</h3>
+</div>
+
+
 </div>

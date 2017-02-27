@@ -33,32 +33,22 @@ chatApp.service( 'bindFields', function(){
 })
 
 
-chatApp.service('GetTheList', function() {
-  var info;
-  this.get = function() {
-    return info;
-  }
-
-  this.set = function (value) {
-    this.info = value;
-  }
-})
 
 chatApp.controller('main',
-function($scope, deepstream, bindFields, $http, $window, GetTheList) {
-  // $scope.usersList = GetTheList.info;
-  // $scope.set = function(value){
-  //     getTheList.set(value);
-  // };
+function($scope, deepstream, bindFields, $http) {
 
+  $scope.logedIn = false;
   var usersList = [];
   $scope.login = function() {
+    console.log($scope.email, $scope.password)
+
     deepstream.login({
       type: 'email',
       email: $scope.email,
       password: $scope.password
     }, (success, data)=> {
       if(!success) {
+
         $http.post(
           'https://api.dsh.cloud/api/v1/user-auth/678bd5dd-1700-4f8a-8e35-cd1552d4576c',
           {email : $scope.email,
@@ -76,7 +66,9 @@ function($scope, deepstream, bindFields, $http, $window, GetTheList) {
           });
         }
         else {
+
           var userId = 'user/' + data.id;
+          $scope.userId = userId;
           var list = deepstream.record.getList('users');
           // $scope.list = list;
           // $scope.list.subscribe(entries);
@@ -96,13 +88,7 @@ function($scope, deepstream, bindFields, $http, $window, GetTheList) {
                   email:data.email
                 })
                 $scope.usersList = usersList;
-                GetTheList.set($scope.usersList);
-                // console.log('login')
-                console.log(GetTheList)
-
-
-                // console.log(getTheList())
-
+                $scope.logedIn = true;
 
                 if (!$scope.$$phase) {
                   $scope.$apply()
@@ -116,22 +102,6 @@ function($scope, deepstream, bindFields, $http, $window, GetTheList) {
         }
 
       })
-
-      setTimeout(function() {
-      //   console.log('setTime')
-        console.log($scope.usersList)
-          $window.location.href = '#/usersPage';
-
-      }, 500)
-
     }
 
   });
-
-    chatApp.controller('usersPage',
-    function($scope, deepstream, bindFields, $window, GetTheList) {
-  $scope.users = GetTheList.info;
-  console.log($scope.users)
-
-
-    })

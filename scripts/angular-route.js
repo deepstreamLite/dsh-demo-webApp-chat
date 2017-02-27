@@ -1,11 +1,7 @@
 chatApp.config(function($routeProvider) {
   $routeProvider
   .when('/', {
-    templateUrl: 'pages/form.html',
+    templateUrl: 'pages/main.html',
     controller: 'main'
-  })
-  .when('/usersPage', {
-    templateUrl: 'pages/usersPage.html',
-    controller: 'usersPage'
   })
 })

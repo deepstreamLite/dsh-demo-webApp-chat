@@ -1,15 +1,30 @@
 <div ng-controller="main">
-<form ng-show="!logedIn">
-  <input type="text" placeholder="email" ng-model="email" ng-required="true"/>
-  <input type="text" placeholder="password" ng-model="password" ng-required="true"/>
-  <button ng-click='login()'>Login</button>
-</form>
+  <form ng-show="!logedIn">
+    <h3>Welcome to the chat app</h3>
+    <input type="text" placeholder="email" ng-model="email" ng-required="true"/>
+    <input type="text" placeholder="password" ng-model="password" ng-required="true"/>
+    <button ng-click='login()'>Login</button>
+  </form>
 
-<div ng-show="logedIn">
-<h2>These are the other users</h2>
-<div ng-repeat="user in usersList" id='{{user.userId}}'>
-<h3>{{user.email}}</h3>
+  <div class="chatPage" ng-show="logedIn">
+    <div class="chatNav">
+    <h3>Hey {{email}},</h3>
+      <h4>pleast choose a user to chat with:</h4>
+    <div ng-repeat="user in usersList" id='{{user.userId}}'>
+      <button class="userLink" id='{{user.userId}}' ng-if="user.userId!==userId" ng-click="setPrivate($event)">{{user.email}}</button>
+    </div>
+  </div>
+
+  <div class="chatArea" ng-show="private">
+    <div class="messageArea">
+      <h3>conversation with {{chatFriend.email}}</h3>
+      <div ng-repeat="message in messages" id='{{message.id}}'>
+        <h5>{{message.from}} says: {{message.message}}</h5>
+      </div>
+    </div>
+    <form ng-submit="submit()">
+    <input type="text" class="input-field" ng-model="newMessage" ng-keyup="$event.keyCode == 13 && submitFunc()"/>
+    </form>
+  </div>
 </div>
-
-
 </div>

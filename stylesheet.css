@@ -1,0 +1,47 @@
+
+
+.chatPage {
+  display: inline;
+}
+
+.chatNav {
+  border-right: 1px solid black;
+  width: 300px;
+  height: 800px;
+  background-color: #C8C8C8;
+  /*position: relative;*/
+}
+
+
+.userLink {
+     background:none!important;
+     border:none;
+     padding:0!important;
+     font: inherit;
+     /*border is optional*/
+     border-bottom:1px solid #444;
+     cursor: pointer;
+     margin-bottom: 20px;
+}
+
+.chatArea {
+  postion: relative;
+  display: inline-block;
+  /*float: right;*/
+  border: 2px solid blue;
+  height: 800px;
+  width: 500px;
+  margin-top: -800px;
+  margin-left: 300px;
+  /*margin-right: 1085px;*/
+  overflow: scroll;
+
+}
+
+.input-field {
+    position: absolute;
+    width: 500px;
+    top: 780px;
+    height: 3%;
+    font-size: 16px;
+}

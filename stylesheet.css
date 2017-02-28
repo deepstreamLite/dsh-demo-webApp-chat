@@ -22,26 +22,51 @@
      border-bottom:1px solid #444;
      cursor: pointer;
      margin-bottom: 20px;
+     position: relative;
+     left: 30px;
+     bottom: 15px;
 }
 
 .chatArea {
   postion: relative;
   display: inline-block;
   /*float: right;*/
+
+  /*margin-right: 1085px;*/
+}
+
+.messageArea {
   border: 2px solid blue;
   height: 800px;
   width: 500px;
   margin-top: -800px;
   margin-left: 300px;
-  /*margin-right: 1085px;*/
+  margin-bottom: 50px;
   overflow: scroll;
+  overflow-y: auto;
+
 
 }
 
 .input-field {
-    position: absolute;
+    position: relative;
     width: 500px;
-    top: 780px;
     height: 3%;
     font-size: 16px;
+    bottom: 70px;
+    left: 300px;
+}
+
+.notOnline {
+  border-radius: 50%;
+  width: 6px;
+  height: 6px;
+  background-color: white;
+  border:1px solid green;
+}
+.circle {
+	border-radius: 50%;
+	width: 8px;
+	height: 8px;
+  background-color: green;
 }

@@ -1,153 +1,166 @@
 
-
-
 var chatApp = angular.module('chatApp', ['ngRoute']);
 
-chatApp.service( 'deepstream', function() {
-
-  return deepstream( 'wss://154.deepstreamhub.com?apiKey=639064d0-1d59-4075-bf11-d25535c91f45')
-
-})
-chatApp.service( 'bindFields', function(){
-  return function getField( $scope, record, names ) {
-    angular.forEach( names, function( name ){
-      Object.defineProperty( $scope, name, {
-        get: function() {
-          return record.get( name );
-        },
-        set: function( newValue ) {
-          if( newValue === undefined ) {
-            return;
-          }
-          record.set( name, newValue );
-        }
-      });
-    });
-
-    record.subscribe(function() {
-      if( !$scope.$$phase ) {
-        $scope.$apply();
-      }
-    });
-  };
+chatApp.service('deepstream', function() {
+  return deepstream( 'wss://154.dsh.cloud?apiKey=678bd5dd-1700-4f8a-8e35-cd1552d4576c');
 })
 
+chatApp.service('deepstreamService', function($q, $http, deepstream) {
+  var deepstreamService =  {}
+  var userId;
+  var userEmail;
 
+  function signUp(email, password) {
+    $http.post(
+      'https://api.dsh.cloud/api/v1/user-auth/678bd5dd-1700-4f8a-8e35-cd1552d4576c',
+      {
+        email : email,
+        password: password
+      },
+      { withCredentials: true }
+    )
+    .then(function(response) {
+      console.log('registered successfuly')
+      console.log(response)
+      deepstreamService.login(email, password)
+    },
+    function(response) {
+      console.log('registered not successfully')
+      console.log(response)
+    });
+  }
 
-chatApp.controller('main',
-function($scope, deepstream, bindFields, $http) {
-
-  $scope.logedIn = false;
-  $scope.private = false;
-  var usersList = [];
-  $scope.login = function() {
-    console.log($scope.email, $scope.password)
-
-    deepstream.login({
-      type: 'email',
-      email: $scope.email,
-      password: $scope.password
-    }, (success, data)=> {
-      if(!success) {
-
-        $http.post(
-          'https://api.dsh.cloud/api/v1/user-auth/678bd5dd-1700-4f8a-8e35-cd1552d4576c',
-          {email : $scope.email,
-            password: $scope.email},
-            { withCredentials: true }
-          )
-
-          .then(function(response) {
-            console.log('registered successfuly')
-            console.log(response)
-          },
-          function(response) {
-            console.log('registered not successfully')
-            console.log(response)
-          });
-        }
-        else {
-
-          var userId = 'user/' + data.id;
-          $scope.userId = userId;
+  deepstreamService.login = function(email, password) {
+    return $q(function(resolve, reject) {
+      deepstream.login({ type: 'email', email: email, password: password }, (success, clientData) => {
+        if (!success) {
+          signUp(email, password)
+        } else {
+          userId = clientData.id
+          userEmail = email
           var list = deepstream.record.getList('users');
           list.whenReady(()=>{
             if(list.getEntries().indexOf(userId)===-1) {
               list.addEntry(userId);
               var rec = deepstream.record.getRecord(userId);
-              rec.set('email', $scope.email)
+              rec.set('email', email)
               rec.discard();
             }
-
-            function addUser(userId) {
-              deepstream.record.snapshot(userId, (err, data) => {
-                usersList.push({
-                  userId:userId,
-                  email:data.email
-                })
-                $scope.usersList = usersList;
-                $scope.logedIn = true;
-
-                if (!$scope.$$phase) {
-                  $scope.$apply()
-                }
-              });
-            }
-            list.on('entry-added', addUser);
-            list.getEntries().forEach(addUser);
+            resolve();
           })
         }
       })
+    })
+}
+
+    deepstreamService.getDeepstream = function() {
+      return deepstream
     }
 
-    $scope.setPrivate = function(event) {
-      $scope.private = true;
-      $scope.messages = [];
-      var messages = [];
-      $scope.chatFriend = {
-        id:event.target.id,
-        email:event.target.innerHTML
+    deepstreamService.getUser = function() {
+      return {
+        id: userId,
+        email: userEmail
       }
-        var chatName = [$scope.userId, $scope.chatFriend.id].sort().join('::');
-        var chatList = deepstream.record.getList(chatName);
-        $scope.chatList = chatList;
-        chatList.subscribe((data)=> {
-          $scope.chatList = data;
+    }
+    return deepstreamService
+  })
+
+chatApp.controller('main', function($scope, deepstreamService) {
+
+  $scope.user = {
+    email: '',
+    password: ''
+  }
+  $scope.loggedIn = false
+
+  $scope.login = function() {
+    deepstreamService.login($scope.user.email, $scope.user.password)
+    .then(function() {
+      $scope.loggedIn = true
+    })
+  }
+})
+
+chatApp.controller('chats', function($scope, $http, deepstreamService, deepstream) {
+  $scope.private = false;
+  $scope.newMessage = '';
+  $scope.usersList = [];
+  $scope.chatFriendEmail = '';
+  $scope.myDetails = deepstreamService.getUser()
+  function addChatMessage(recordName) {
+    var rec = deepstream.record.getRecord(recordName);
+    rec.whenReady(()=>{
+      $scope.messages.push(rec);
+      if (!$scope.$$phase) {
+        $scope.$apply()
+      }
+    })
+  }
+
+  $scope.onlineUsers = [];
+  deepstream.presence.getAll((onlineUsers) => {
+    console.log('online users', onlineUsers)
+    $scope.onlineUsers = onlineUsers
+    console.log(onlineUsers.indexOf('b4423a94-9d79-4c18-a9b3-34271b769eb0'))
+  })
+  deepstream.presence.subscribe((username, online) => {
+    if (online) {
+      $scope.onlineUsers.push(username)
+    }
+  })
+
+
+  var userId = $scope.myDetails.id;
+  var deepstream = deepstreamService.getDeepstream();
+
+  var list = deepstream.record.getList('users');
+  list.whenReady(()=>{
+    function addUser(userId) {
+      deepstream.record.snapshot(userId, (err, data) => {
+        $scope.usersList.push({
+          userId: userId,
+          email: data.email
         })
-        chatList.whenReady(()=>{
-          chatList.getEntries().forEach(function(recordName) {
-            var obj = {};
-            var rec = deepstream.record.getRecord(recordName);
-            rec.whenReady(()=>{
-              obj = {
-                id: rec.name,
-                message: rec.get('message'),
-                from: rec.get('from'),
-                to: rec.get('to')
-              }
-              messages.push(obj);
-              $scope.messages = messages;
-              if (!$scope.$$phase) {
-                $scope.$apply()
-              }
-            })
-          })
-        })
-        $scope.submit = function() {
-          var messageId = deepstream.getUid();
-          deepstream.record.getRecord(messageId).set({
-            message: $scope.newMessage,
-            from: $scope.email,
-            to: $scope.chatFriend.email
-          })
-          $scope.messages.push({
-            message: $scope.newMessage,
-            from: $scope.email,
-            to: $scope.chatFriend.email
-          })
-          chatList.addEntry(messageId);
-          $scope.newMessage = '';
+        console.log($scope.usersList)
+        if (!$scope.$$phase) {
+          $scope.$apply()
         }
+      });
+    }
+    list.on('entry-added', addUser);
+    list.getEntries().forEach(addUser);
+  })
+
+
+  $scope.selectChat = function(friendId, friendEmail) {
+    $scope.newMessage = '';
+    $scope.private = true;
+    $scope.messages = [];
+    $scope.chatFriendEmail = friendEmail;
+
+    var chatName = [userId,friendId].sort().join('::');
+
+    var chatList = deepstream.record.getList(chatName);
+
+    chatList.whenReady(function() {
+      chatList.on('entry-added', addChatMessage);
+      chatList.getEntries().forEach(addChatMessage);
+    })
+
+    $scope.submit = function() {
+      var record = deepstream.record.getRecord(deepstream.getUid())
+      record.whenReady(()=> {
+        record.set({
+          message: $scope.newMessage,
+          from: $scope.user.email,
+          to: friendEmail,
+          time: Date.now()
+        })
+        chatList.addEntry(record.name);
+        $scope.newMessage = '';
+      })
     }
 
-  });
+  }
+});

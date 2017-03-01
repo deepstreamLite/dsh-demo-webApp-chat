@@ -1,19 +1,36 @@
 
-
-.chatPage {
-  display: inline;
+body {
+  font-family: 'Lato', sans-serif;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding-top: 53px;
+  padding-bottom: 64px;
 }
 
+
 .chatNav {
-  border-right: 1px solid black;
-  width: 300px;
-  height: 800px;
-  background-color: #C8C8C8;
-  /*position: relative;*/
+  float: left;
+  width: 200px;
+  height: 91%;
+  cursor: pointer;
+  background: #3e313c;
+  border-top: 2px solid #372c36;
+  padding: 7px 0 9px 8px;
+  /*height: 4rem;*/
+  position: fixed;
+  top: 0px;
+  z-index: 10;
 }
 
 
 .userLink {
+  padding-right: .25rem;
+  color: 	#FFF0F5 !important;
+  font-weight: 900;
+  margin-left: 0;
+  font-style: normal;
+  text-decoration: none;
      background:none!important;
      border:none;
      padding:0!important;
@@ -24,7 +41,50 @@
      margin-bottom: 20px;
      position: relative;
      left: 30px;
-     bottom: 15px;
+     bottom: 13px;
+     font-weight: 100;
+}
+
+.userLinkPressed {
+  padding-right: .25rem;
+  color: 	#C71585 !important;
+  font-weight: 900;
+  margin-left: 0;
+  font-style: normal;
+  text-decoration: none;
+     background:none!important;
+     border:none;
+     padding:0!important;
+     font: inherit;
+     /*border is optional*/
+     border-bottom:1px solid #444;
+     cursor: pointer;
+     margin-bottom: 20px;
+     position: relative;
+     left: 30px;
+     bottom: 13px;
+     font-weight: 100;
+}
+
+/*button:active {
+  background-color: yellow;
+  color: yellow;
+}
+
+.active {
+  background-color: yellow;
+  color: yellow;
+}*/
+
+.chat-body {
+    position: fixed;
+    padding: 0;
+    margin: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #F9F9F9;
 }
 
 .chatArea {
@@ -33,28 +93,103 @@
   /*float: right;*/
 
   /*margin-right: 1085px;*/
+  position: fixed;
+  padding: 0;
+  margin: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #F9F9F9;
+
 }
 
+
+/*position: relative;
+    height: 80vh;
+    height: 80vh;
+    background-color: #F9F9F9;
+    overflow-y: scroll;
+    display: flex;*/
+
 .messageArea {
-  border: 2px solid blue;
-  height: 800px;
-  width: 500px;
-  margin-top: -800px;
+
+  postion: relative;
+
+  height: 85vh;
+  width: 260vh;
   margin-left: 300px;
   margin-bottom: 50px;
-  overflow: scroll;
-  overflow-y: auto;
+  /*overflow: scroll;*/
+  overflow-y: scroll;
 
+  margin-left: 220px;
+    /*overflow-y: auto;*/
+    /*overflow-x: hidden;*/
+    /*height: 100%;*/
+    padding: 0 18px 1rem 1.5rem;
+    padding-top: 40px;
+}
+
+.messageContent {
+  position: relative;
+  /*margin-top: .5rem;*/
+  /*padding: rem 2rem .1rem 3rem;*/
+  min-height: 36px;
+  padding-top: 0px;
+}
+
+.message_username {
+  font-weight: 900;
+  padding-right: .25rem;
+  color: #3d3c40 !important;
+  margin-left: 0;
+  font-style: normal;
+  text-decoration: none;
+}
+
+.message_timestamp {
+  text-align: left;
+  display: inline;
+  position: relative;
+  top: 0;
+  left: 0;
+  color: #babbbf;
+  font-size: 12px;
+  line-height: 1.2rem;
+  width: 36px;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.message_content {
+  color: #3d3c40;
+  display: block;
+  min-height: 1rem;
+  font-weight: 100;
 
 }
 
 .input-field {
     position: relative;
-    width: 500px;
-    height: 3%;
-    font-size: 16px;
-    bottom: 70px;
-    left: 300px;
+    width: 1500px;
+    height: 30px;
+    font-size: 15px;
+    /*bottom: 70px;
+    left: 300px;*/
+    /*margin-top: 60px;*/
+    /*padding-top: 10px;*/
+    bottom: 65px;
+}
+
+
+.textArea {
+  position: relative;
+  width: 800px;
+  height: 30px;
+  font-size: 16px;
+  display:inline-block;
+  margin-left: 210px;
 }
 
 .notOnline {
@@ -62,11 +197,49 @@
   width: 6px;
   height: 6px;
   background-color: white;
-  border:1px solid green;
+  border:1px solid #2E8B57;
 }
 .circle {
 	border-radius: 50%;
 	width: 8px;
 	height: 8px;
-  background-color: green;
+  background-color: #2E8B57;
+}
+
+.myDetails {
+  position: relative;
+  display: inline-block;
+}
+
+.currentUser {
+  position: relative;
+  padding-right: .25rem;
+  color: 	#FFF0F5 !important;
+  font-weight: 900;
+  margin-left: 0;
+  font-style: normal;
+  text-decoration: none;
+  bottom: 35px;
+  margin-left: 25px;
+}
+.currentCircle {
+  position: relative;
+  border-radius: 50%;
+	width: 8px;
+	height: 8px;
+  background-color: #2E8B57;
+  margin-top: 60px;
+}
+
+
+/*.pressedUser {
+    background-color: yellow;
+    height: 20px;
+    width: 170px;
+}*/
+
+.eachUser {
+  /*height: 20px;
+  width: 170px;
+  margin-bottom: 10px;*/
 }

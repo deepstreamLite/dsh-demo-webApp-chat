@@ -9,11 +9,14 @@
   <div ng-controller="chats" ng-if="loggedIn">
     <div class="chatPage">
       <div class="chatNav">
-      <h3>Hey {{myDetails.email}},</h3>
-        <h4>pleast choose a user to chat with:</h4>
+        <div class="myDetails">
+        <div class='currentCircle'></div>
+      <h3 class="currentUser">{{myDetails.email}}</h3>
+    </div>
       <div ng-repeat="user in usersList" class="users">
         <div ng-if="user.userId !== myDetails.id" ng-class="onlineUsers.indexOf(user.userId) > -1 ? 'circle' : 'notOnline'"></div>
-        <button class="userLink" ng-if="user.userId !== myDetails.id" ng-click="selectChat(user.userId, user.email)">
+        <button ng-class="user.userId == highlighted ? 'userLinkPressed' : 'userLink'" ng-if="user.userId !== myDetails.id"
+        ng-click="selectChat(user.userId, user.email)">
           {{user.email}}
         </button>
       </div>
@@ -23,16 +26,17 @@
 
     <div class="chatArea" ng-show="private">
       <div class="messageArea">
-        <h3>conversation with {{chatFriendEmail}}</h3>
-        <div ng-repeat="message in messages">
-          <h5>{{message.get('from')}} {{message.get('time') | date:"h:mma"}}</h5>
+        <div ng-repeat="message in messages" class="messageContent">
+          <h5>{{message.get('from')}} <span class="message_timestamp">{{message.get('time') | date:"h:mma"}}</span></h5>
           <span ng-bind="message.get('message')"></span>
         </div>
       </div>
+      <div class="textArea">
       <form ng-submit="submit()">
         <input placeholder="write your message" type="text" class="input-field" ng-model="newMessage"/>
         <button type="submit" ng-show="false"></button>
       </form>
+    </div>
     </div>
   </div>
   </div>

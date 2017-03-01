@@ -102,11 +102,20 @@ chatApp.controller('chats', function($scope, $http, deepstreamService, deepstrea
   deepstream.presence.getAll((onlineUsers) => {
     console.log('online users', onlineUsers)
     $scope.onlineUsers = onlineUsers
-    console.log(onlineUsers.indexOf('b4423a94-9d79-4c18-a9b3-34271b769eb0'))
   })
   deepstream.presence.subscribe((username, online) => {
     if (online) {
-      $scope.onlineUsers.push(username)
+      $scope.onlineUsers.push(username);
+      if (!$scope.$$phase) {
+        $scope.$apply()
+      }
+    }
+    else {
+      console.log(username)
+      $scope.onlineUsers.splice($scope.onlineUsers.indexOf(username), 1);
+      if (!$scope.$$phase) {
+        $scope.$apply()
+      }
     }
   })
 
@@ -132,8 +141,13 @@ chatApp.controller('chats', function($scope, $http, deepstreamService, deepstrea
     list.getEntries().forEach(addUser);
   })
 
+  $scope.isActive = false;
 
   $scope.selectChat = function(friendId, friendEmail) {
+    $scope.highlighted = friendId;
+    console.log($scope.highlighted)
+    $scope.isActive = !$scope.isActive;
+
     $scope.newMessage = '';
     $scope.private = true;
     $scope.messages = [];
@@ -157,6 +171,9 @@ chatApp.controller('chats', function($scope, $http, deepstreamService, deepstrea
           to: friendEmail,
           time: Date.now()
         })
+        if (!$scope.$$phase) {
+          $scope.$apply()
+        }
         chatList.addEntry(record.name);
         $scope.newMessage = '';
       })

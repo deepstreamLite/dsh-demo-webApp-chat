@@ -111,14 +111,12 @@ chatApp.controller('chats', function($scope, $http, deepstreamService, deepstrea
       }
     }
     else {
-      console.log(username)
       $scope.onlineUsers.splice($scope.onlineUsers.indexOf(username), 1);
       if (!$scope.$$phase) {
         $scope.$apply()
       }
     }
   })
-
 
   var userId = $scope.myDetails.id;
   var deepstream = deepstreamService.getDeepstream();
@@ -131,7 +129,6 @@ chatApp.controller('chats', function($scope, $http, deepstreamService, deepstrea
           userId: userId,
           email: data.email
         })
-        console.log($scope.usersList)
         if (!$scope.$$phase) {
           $scope.$apply()
         }
@@ -141,13 +138,8 @@ chatApp.controller('chats', function($scope, $http, deepstreamService, deepstrea
     list.getEntries().forEach(addUser);
   })
 
-  $scope.isActive = false;
-
-  $scope.selectChat = function(friendId, friendEmail) {
+    $scope.selectChat = function(friendId, friendEmail) {
     $scope.highlighted = friendId;
-    console.log($scope.highlighted)
-    $scope.isActive = !$scope.isActive;
-
     $scope.newMessage = '';
     $scope.private = true;
     $scope.messages = [];
@@ -178,6 +170,5 @@ chatApp.controller('chats', function($scope, $http, deepstreamService, deepstrea
         $scope.newMessage = '';
       })
     }
-
   }
 });

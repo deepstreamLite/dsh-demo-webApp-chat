@@ -8,7 +8,6 @@ body {
   padding-bottom: 64px;
 }
 
-
 .chatNav {
   float: left;
   width: 200px;
@@ -21,7 +20,6 @@ body {
   top: 0px;
   z-index: 10;
 }
-
 
 .userLink {
   padding-right: .25rem;
@@ -62,8 +60,6 @@ body {
   bottom: 13px;
   font-weight: 100;
 }
-
-
 
 .chat-body {
   position: fixed;
@@ -136,7 +132,6 @@ body {
   display: block;
   min-height: 1rem;
   font-weight: 100;
-
 }
 
 .input-field {
@@ -146,7 +141,6 @@ body {
   font-size: 15px;
   bottom: 65px;
 }
-
 
 .textArea {
   position: relative;
@@ -164,6 +158,7 @@ body {
   background-color: white;
   border:1px solid #2E8B57;
 }
+
 .circle {
   border-radius: 50%;
   width: 8px;

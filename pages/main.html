@@ -2,7 +2,7 @@
   <form ng-if="!loggedIn">
     <h3>Welcome to the chat app</h3>
     <input type="text" placeholder="email" ng-model="user.email" ng-required="true"/>
-    <input type="text" placeholder="password" ng-model="user.password" ng-required="true"/>
+    <input type="password" placeholder="password" ng-model="user.password" ng-required="true"/>
     <button ng-click='login()'>Login</button>
   </form>
 
@@ -22,13 +22,11 @@
       </div>
     </div>
 
-
-
     <div class="chatArea" ng-show="private">
       <div class="messageArea">
         <div ng-repeat="message in messages" class="messageContent">
-          <h5>{{message.get('from')}} <span class="message_timestamp">{{message.get('time') | date:"h:mma"}}</span></h5>
-          <span ng-bind="message.get('message')"></span>
+          <h5>{{message.get('email')}} <span class="message_timestamp">{{message.get('time') | date:"h:mma"}}</span></h5>
+          <span ng-bind="message.get('content')"></span>
         </div>
       </div>
       <div class="textArea">
